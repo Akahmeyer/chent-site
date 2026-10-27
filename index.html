@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Chent</title>
+<meta name="description" content="Chent lets you give as little as 1¢ of every dollar you earn to the charities you choose.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one calm column, a hero with a live "paycheck slip" beside it, then short sections divided by space, not boxes. */
+:root {
+  --bg: #ffffff;
+  --surface: #f3f8f4;
+  --fg: #14201a;
+  --muted: #4d5f55;
+  --line: #d9e6dd;
+  --accent: #1c7a45;
+  --accent-strong: #135c33;
+  --on-accent: #ffffff;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Public Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1511; --surface: #16211b; --fg: #e5eee8; --muted: #a3b5aa;
+    --line: #26362d; --accent: #4cc27c; --accent-strong: #6fd697; --on-accent: #08130c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1511; --surface: #16211b; --fg: #e5eee8; --muted: #a3b5aa;
+  --line: #26362d; --accent: #4cc27c; --accent-strong: #6fd697; --on-accent: #08130c;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 17px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1080px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; margin: 0; text-wrap: balance; color: var(--fg); }
+p { margin: 0; }
+a { color: var(--accent-strong); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+/* Nav */
+.nav { padding-block: 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--bg); }
+.mark { font-family: var(--display); font-weight: 800; font-size: 34px; letter-spacing: -0.035em; color: var(--fg); text-decoration: none; display: inline-block; line-height: 1; white-space: nowrap; }
+.mark .cent { position: relative; display: inline-block; color: var(--accent); }
+.mark .cent::after { content: ""; position: absolute; left: 0.32em; top: 0.5em; width: 0.12em; height: 0.96em; background: var(--accent); transform: translate(-50%, -50%) skewX(-12deg); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 24px; border-radius: 999px;
+  background: var(--accent); color: var(--on-accent); border: 0;
+  font: 600 16px/1 var(--body); text-decoration: none; cursor: pointer;
+  transition: background .15s ease, transform .15s ease;
+}
+.btn:hover { background: var(--accent-strong); }
+.btn:active { transform: translateY(1px); }
+.btn.ghost { background: transparent; color: var(--accent-strong); box-shadow: inset 0 0 0 2px var(--accent); }
+.btn.ghost:hover { background: var(--surface); }
+.btn.small { min-height: 44px; padding: 0 18px; font-size: 15px; }
+
+/* Hero */
+.hero { padding-block: 48px 72px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 56px; align-items: center; }
+.eyebrow { font: 500 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-strong); margin-bottom: 18px; }
+.hero h1 { font-size: clamp(44px, 7vw, 82px); font-weight: 800; letter-spacing: -0.035em; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.lede { margin-top: 22px; font-size: 20px; color: var(--muted); max-width: 32ch; }
+.hero-actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; }
+.soon { margin-top: 14px; font-size: 14px; color: var(--muted); }
+
+/* Paycheck slip */
+.slip { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px; }
+.slip-head { display: flex; justify-content: space-between; align-items: baseline; font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-bottom: 16px; border-bottom: 1px dashed var(--line); }
+.field { display: grid; gap: 6px; margin-top: 18px; }
+.field label { font-size: 14px; font-weight: 600; color: var(--fg); }
+.money { display: flex; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 0 14px; }
+.money span { font: 500 18px var(--mono); color: var(--muted); }
+.money input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--fg); font: 500 18px var(--mono); padding: 12px 8px; }
+.money input:focus { outline: none; }
+.money:focus-within { box-shadow: 0 0 0 3px var(--accent); }
+.pcts { display: flex; flex-wrap: wrap; gap: 8px; }
+.pct { min-height: 44px; min-width: 56px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); font: 500 15px var(--mono); cursor: pointer; }
+.pct[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.lines { margin-top: 20px; border-top: 1px dashed var(--line); padding-top: 14px; display: grid; gap: 10px; font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; }
+.line { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); }
+.line b { font-weight: 500; color: var(--fg); }
+.line.total { color: var(--fg); font-size: 17px; padding-top: 10px; border-top: 1px solid var(--line); }
+.line.total b { color: var(--accent-strong); font-size: 20px; }
+.slip-note { margin-top: 14px; font-size: 13px; color: var(--muted); }
+
+/* Sections */
+section { padding-block: 72px; border-top: 1px solid var(--line); }
+.sec-title { font-size: clamp(32px, 4.4vw, 48px); font-weight: 700; letter-spacing: -0.025em; max-width: 20ch; }
+.sec-lede { margin-top: 16px; color: var(--muted); max-width: 60ch; font-size: 18px; }
+
+.steps { margin: 44px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; counter-reset: step; }
+.steps li { counter-increment: step; display: grid; gap: 10px; align-content: start; }
+.steps li::before { content: counter(step); font: 800 20px/1 var(--display); color: var(--on-accent); background: var(--accent); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; }
+.steps h3 { font-size: 22px; font-weight: 700; margin-top: 6px; }
+.steps p { color: var(--muted); }
+
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 44px; }
+.kind { padding: 30px; border-radius: 16px; background: var(--surface); display: grid; gap: 10px; align-content: start; }
+.kind .sym { font: 800 48px/1 var(--display); color: var(--accent); }
+.kind h3 { font-size: 24px; font-weight: 700; }
+.kind p { color: var(--muted); }
+
+.goal { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center; }
+.big { font: 800 clamp(64px, 11vw, 132px)/0.9 var(--display); letter-spacing: -0.04em; color: var(--accent); }
+.big small { display: block; margin-top: 14px; font: 500 15px/1.4 var(--body); letter-spacing: 0; color: var(--muted); }
+
+.facts { margin: 36px 0 0; padding: 0; list-style: none; display: grid; gap: 0; }
+.facts li { display: flex; gap: 16px; padding-block: 18px; border-bottom: 1px solid var(--line); }
+.facts li:first-child { border-top: 1px solid var(--line); }
+.facts .k { flex: 0 0 120px; font: 500 15px var(--mono); color: var(--accent-strong); font-variant-numeric: tabular-nums; }
+.facts .v { color: var(--fg); min-width: 0; }
+
+.join { text-align: left; background: var(--accent); color: var(--on-accent); border-radius: 24px; padding: 56px max(24px, 5vw); display: grid; gap: 18px; justify-items: start; }
+.join h2 { color: var(--on-accent); font-size: clamp(34px, 5vw, 56px); font-weight: 800; letter-spacing: -0.03em; }
+.join p { max-width: 52ch; font-size: 18px; opacity: .92; }
+.join .btn { background: var(--on-accent); color: var(--accent-strong); }
+.join .btn:hover { background: var(--surface); }
+.join .btn.ghost { background: transparent; color: var(--on-accent); box-shadow: inset 0 0 0 2px var(--on-accent); }
+.join-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.join .soon { color: var(--on-accent); opacity: .85; }
+.join-sec { border-top: 0; padding-top: 24px; }
+
+footer { padding-block: 40px 56px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+
+@media (max-width: 820px) {
+  .hero, .goal { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .steps, .two { grid-template-columns: minmax(0, 1fr); }
+  .hero { padding-block: 24px 56px; }
+  section { padding-block: 56px; }
+}
+@media (max-width: 460px) {
+  .mark { font-size: 30px; }
+  .nav .btn { min-height: 44px; padding: 0 16px; font-size: 14px; }
+  .hero h1 { font-size: 46px; }
+  .lede { font-size: 18px; }
+  .hero-actions .btn, .join-actions .btn { flex: 1 1 100%; }
+  section { padding-block: 48px; }
+  .steps { margin-top: 32px; gap: 28px; }
+  .two { margin-top: 32px; gap: 16px; }
+  .kind { padding: 24px; }
+  .join { padding: 36px 22px; border-radius: 20px; }
+  .slip { padding: 20px; }
+  .pct { flex: 1 1 0; min-width: 0; }
+  footer { flex-direction: column; gap: 8px; }
+  .facts li { flex-direction: column; gap: 4px; }
+  .facts .k { flex: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="nav">
+    <a class="mark" href="#top" aria-label="Chent home"><span class="cent" aria-hidden="true">C</span><span aria-hidden="true">hent</span></a>
+    <a class="btn small signup" href="#join">Join the waitlist</a>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <div>
+        <p class="eyebrow">A non-profit giving app</p>
+        <h1><em>Change</em> is all it&nbsp;takes.</h1>
+        <p class="lede">Give as little as 1¢ of every dollar you earn to the charities you care about. Set it once and it happens every payday.</p>
+        <div class="hero-actions">
+          <a class="btn signup" href="#join">Join the waitlist</a>
+          <a class="btn ghost" href="#how">See how it works</a>
+        </div>
+      </div>
+
+      <div class="slip" aria-labelledby="slip-title">
+        <div class="slip-head"><span id="slip-title">Your paycheck, with Chent</span><span>Example</span></div>
+        <div class="field">
+          <label for="pay">Paycheck amount</label>
+          <div class="money"><span aria-hidden="true">$</span><input id="pay" inputmode="decimal" autocomplete="off" value="1,200.00" aria-describedby="slip-note"></div>
+        </div>
+        <div class="field">
+          <label id="pct-label">Cents per dollar you give</label>
+          <div class="pcts" role="group" aria-labelledby="pct-label">
+            <button type="button" class="pct" data-p="1" aria-pressed="true">1¢</button>
+            <button type="button" class="pct" data-p="2" aria-pressed="false">2¢</button>
+            <button type="button" class="pct" data-p="3" aria-pressed="false">3¢</button>
+            <button type="button" class="pct" data-p="5" aria-pressed="false">5¢</button>
+          </div>
+        </div>
+        <div class="lines" aria-live="polite">
+          <div class="line"><span>You give</span><b id="give">$12.00</b></div>
+          <div class="line"><span>Keeps Chent running</span><b id="fee">$0.12</b></div>
+          <div class="line total"><span>To your charities</span><b id="net">$11.88</b></div>
+        </div>
+        <p class="slip-note" id="slip-note">Chent keeps 1¢ of every dollar you donate. The rest goes to the charities you pick.</p>
+      </div>
+    </div>
+
+    <section id="how">
+      <h2 class="sec-title">Giving that fits into every paycheck</h2>
+      <p class="sec-lede">Most people want to give more. It just feels like too much, or it slips their mind. Chent makes the amount small and the habit automatic.</p>
+      <ol class="steps">
+        <li><h3>Pick your charities</h3><p>Choose the causes you care about, from food banks to animal shelters. Split your gift between as many as you like.</p></li>
+        <li><h3>Set your amount</h3><p>Start at 1¢ of every dollar you earn, and raise it anytime. Chent sets aside your gift each payday.</p></li>
+        <li><h3>Watch it add up</h3><p>Chent combines small gifts into larger donations so less is lost to bank fees. You see every dollar delivered.</p></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2 class="sec-title">Both Kinds of <span style="color: var(--accent)">Change</span></h2>
+      <p class="sec-lede">The spare change from every dollar you earn is all it takes to make real change for the people and places that need it most.</p>
+      <div class="two">
+        <div class="kind"><span class="sym" aria-hidden="true">¢</span><h3>The change in your pocket</h3><p>A penny from each dollar is easy to miss. Over a year it can be hundreds of dollars for a cause you love.</p></div>
+        <div class="kind"><span class="sym" aria-hidden="true">↗</span><h3>The change in the world</h3><p>When thousands of people give a little, charities get steady support they can plan around, every month.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="goal">
+        <div>
+          <h2 class="sec-title">Every charity, one place</h2>
+          <p class="sec-lede">Our goal is to list every charity on Chent, so you can support any cause you believe in from one app. If you run a charity, we want you on it.</p>
+          <div class="hero-actions"><a class="btn ghost signup" href="#join">Add your charity</a></div>
+        </div>
+        <p class="big">99¢<small>of every dollar donated goes straight to charity</small></p>
+      </div>
+      <ul class="facts">
+        <li><span class="k">Non-profit</span><span class="v">Chent is built to cover its own costs, not to make a profit.</span></li>
+        <li><span class="k">1¢ fee</span><span class="v">The only fee is 1¢ per dollar donated. It pays for running the app.</span></li>
+        <li><span class="k">No ad cost</span><span class="v">Advertising is funded by supporters and investors, never by your donations.</span></li>
+        <li><span class="k">Receipts</span><span class="v">Your giving history and tax receipts are kept in one place.</span></li>
+      </ul>
+    </section>
+
+    <section class="join-sec" id="join">
+      <div class="join">
+        <h2>Be one of the first</h2>
+        <p>Chent is being built now. Join the waitlist to hear when it launches, or tell us about a charity you want to see on it.</p>
+        <div class="join-actions">
+          <a class="btn signup" href="#join">Join the waitlist</a>
+          <a class="btn ghost signup" href="#join">Add a charity</a>
+        </div>
+        <p class="soon" id="soon" hidden>Sign-ups open in a few days. Check back soon.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Chent. Change is all it takes.</span>
+    <span>Chent is in development and is not accepting donations yet.</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // Paste your sign-up form link here (for example a Google Form) to turn on every "Join" button.
+  var SIGNUP_URL = "https://forms.gle/wRrRK2nUsSFQhvrz6";
+
+  var links = document.querySelectorAll(".signup");
+  var soon = document.getElementById("soon");
+  links.forEach(function (a) {
+    if (SIGNUP_URL) {
+      a.href = SIGNUP_URL; a.target = "_blank"; a.rel = "noopener";
+    } else {
+      a.addEventListener("click", function () { soon.hidden = false; });
+    }
+  });
+
+  var pay = document.getElementById("pay");
+  var btns = document.querySelectorAll(".pct");
+  var pct = 1;
+  var fmt = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+
+  function amount() {
+    var n = parseFloat(String(pay.value).replace(/[^0-9.]/g, ""));
+    return isFinite(n) && n > 0 ? n : 0;
+  }
+  function update() {
+    var give = Math.round(amount() * pct) / 100;
+    var fee = Math.round(give) / 100;
+    document.getElementById("give").textContent = fmt.format(give);
+    document.getElementById("fee").textContent = fmt.format(fee);
+    document.getElementById("net").textContent = fmt.format(give - fee);
+  }
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      pct = Number(b.dataset.p);
+      btns.forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
+      update();
+    });
+  });
+  pay.addEventListener("input", update);
+  pay.addEventListener("blur", function () { if (amount()) pay.value = amount().toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); });
+  update();
+})();
+</script>
+</body>
+</html>
